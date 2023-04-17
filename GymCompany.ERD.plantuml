@@ -1,0 +1,304 @@
+' INFO: https://plantuml.com/
+
+@startuml GymCompany
+
+skinparam linetype ortho
+left to right direction
+
+entity Branch {
+    -id: ObjectID <<generated>>
+    --
+    *name: string
+    *address: string
+    isActive?: boolean
+    createdAt?: Date
+    updatedAt?: Date
+}
+
+entity Staff {
+    -id: ObjectID <<generated>>
+    --
+    ~branchId: ObjectID
+    --
+    *firstName: string
+    *lastName: string
+    *email: string
+    *phoneNumber: string
+    dateOfBirth?: Date
+    gender?: EGender
+    isActive?: boolean
+    avatarUrl?: string
+    createdAt?: Date
+    updatedAt?: Date
+}
+
+entity Role {
+    -id: ObjectID <<generated>>
+    --
+    *name: EStaffRole
+    createdAt?: Date
+    updatedAt?: Date
+}
+
+
+entity RoleOfStaff {
+    -id: ObjectID <<generated>>
+    --
+    ~staffId: ObjectID
+    ~roleId: ObjectID
+    --
+    createdAt?: Date
+    updatedAt?: Date
+}
+
+entity Client {
+    -id: ObjectID <<generated>>
+    --
+    ~levelId: ObjectID
+    --
+    *firstName: string
+    *lastName: string
+    *email: string
+    *phoneNumber: string
+    dateOfBirth?: Date
+    gender?: EGender
+    isActive?: boolean
+    avatarUrl?: string
+    createdAt?: Date
+    updatedAt?: Date
+}
+
+entity WorkingSchedule {
+    -id: ObjectID <<generated>>
+    --
+    ~staffId: ObjectID
+    ~clientId: ObjectID
+    --
+    *date: Date
+    *startTime: Date
+    *endTime: Date
+    *isStaffPresent: boolean
+    isClientPresent?: boolean
+    createdAt?: Date
+    updatedAt?: Date
+}
+
+entity Feedback {
+    -id: ObjectID <<generated>>
+    --
+    ~clientId: ObjectID
+    --
+    *content: string
+    createdAt?: Date
+    updatedAt?: Date
+}
+
+entity UserCrendential {
+    -id: ObjectID <<generated>>
+    --
+    ~userId: ObjectID
+    --
+    *password: string
+    createdAt?: Date
+    updatedAt?: Date
+}
+
+entity Media {
+    -id: ObjectID <<generated>>
+    --
+    ~clientId: ObjectID
+    ~trainerId: ObjectID
+    --
+    *type: EMediaType
+    *url: string
+    createdAt?: Date
+    updatedAt?: Date
+}
+
+entity Policy {
+    -id: ObjectID <<generated>>
+    --
+    *content: string
+    createdAt?: Date
+    updatedAt?: Date
+}
+
+entity Notification {
+    -id: ObjectID <<generated>>
+    --
+    *title: string
+    *content: string
+    createdAt?: Date
+    updatedAt?: Date
+}
+
+entity DishIngredient {
+    -id: ObjectID <<generated>>
+    --
+    *name: string
+    *price: number
+    *unit: string
+    *calories: number
+    protein?: number
+    fat?: number
+    carbohydrate?: number
+    sugar?: number
+    sodium?: number
+    cholesterol?: number
+    saturatedFat?: number
+    unsaturatedFat ?: number
+    fiber?: number
+    vitaminA?: number
+    vitaminC?: number
+    calcium?: number
+    iron?: number
+    createdAt?: Date
+    updatedAt?: Date
+}
+
+entity IngredientCombination {
+    -id: ObjectID <<generated>>
+    --
+    *dishIngredientId: ObjectID
+    *recommendedMealId: ObjectID
+    --
+    createdAt?: Date
+    updatedAt?: Date
+}
+
+entity RecommendedMeal {
+    -id: ObjectID <<generated>>
+    --
+    *name: string
+    *description: string
+    createdAt?: Date
+    updatedAt?: Date
+}
+
+entity Course {
+    -id: ObjectID <<generated>>
+    --
+    *name: string
+    *price: number
+    *totalSession: number
+    description?: string
+    createdAt?: Date
+    updatedAt?: Date
+}
+
+entity Payment {
+    -id: ObjectID <<generated>>
+    --
+    ~clientId: ObjectID
+    --
+    *amount: number
+    *type: EPaymentType
+    *status: EPaymentStatus
+    createdAt?: Date
+    updatedAt?: Date
+}
+
+entity TrainingContract {
+    -id: ObjectID <<generated>>
+    --
+    ~trainerId: ObjectID
+    ~clientId: ObjectID
+    ~courseId: ObjectID
+    ~paymentId: ObjectID
+    --
+    *startDate: Date
+    *endDate: Date
+    *remainingSession: number
+    createdAt?: Date
+    updatedAt?: Date
+}
+
+entity PhysicalCondition {
+    -id: ObjectID <<generated>>
+    --
+    ~clientId: ObjectID
+    --
+    *weight: number
+    *height: number
+    *bodyFat: number
+    *muscle: number
+    *bmi: number
+    createdAt?: Date
+    updatedAt?: Date
+}
+
+entity LevelOfMembership {
+    -id: ObjectID <<generated>>
+    --
+    *level: ELevelOfMembership
+    *discount: number
+    *description: string
+    createdAt?: Date
+    updatedAt?: Date
+}
+
+enum EStaffRole {
+    MANAGER = 'manager'
+    TRAINER = 'trainer'
+    ACCOUNTING = 'accounting'
+    SALE = 'sale'
+}
+
+enum EPaymentType {
+    CASH = 'cash'
+    CARD = 'card'
+    MOMO = 'momo'
+    INTERNET_BANKING = 'internet banking'
+}
+
+enum EPaymentStatus {
+    PENDING = 'pending'
+    SUCCESS = 'success'
+    FAILED = 'failed'
+}
+
+enum EMediaType {
+    IMAGE = 'image'
+    VIDEO = 'video'
+}
+
+enum EGender {
+    MALE = 'male'
+    FEMALE = 'female'
+}
+
+enum ELevelOfMembership {
+    BRONZE = 'bronze'
+    SILVER = 'silver'
+    GOLD = 'gold'
+    PLATIUM = 'platium'
+}
+Branch ||--|{ Staff
+
+Staff ||--|{ RoleOfStaff
+Staff ||--|| UserCrendential
+Staff ||--o{ TrainingContract
+Staff ||--|{ WorkingSchedule
+Staff ||--o{ Media
+
+Client |o--o{ WorkingSchedule
+Client ||--|| UserCrendential
+Client ||--o{ Media
+Client ||--o| PhysicalCondition
+Client ||--o{ Feedback
+Client ||--o{ Payment
+
+TrainingContract |o--|| Client
+TrainingContract ||--|| Payment
+
+Course ||--o{ TrainingContract
+
+Role ||--|{ RoleOfStaff
+
+LevelOfMembership ||--o{ Client
+
+DishIngredient ||--o{ IngredientCombination
+
+RecommendedMeal ||--o{ IngredientCombination
+
+@enduml
