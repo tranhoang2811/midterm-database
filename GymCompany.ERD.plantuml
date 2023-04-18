@@ -282,7 +282,7 @@ Staff ||--|{ WorkingSchedule
 Staff ||--o{ Media
 
 Client |o--o{ WorkingSchedule
-Client ||--|| UserCrendential
+Client ||--o| UserCrendential
 Client ||--o{ Media
 Client ||--o| PhysicalCondition
 Client ||--o{ Feedback
